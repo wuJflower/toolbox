@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
+from capLevel import init_speed_level
 
 ttk.Style().configure("Custom.TButton", background="lightblue",  font=("Arial", 15))
 
@@ -82,7 +83,7 @@ def init_home():
     open_fix_cap_button = ttk.Button(root, text="VPP计算", width=20) 
     open_fix_cap_button.pack(pady=10)
     
-    open_fix_cap_button = ttk.Button(root, text="频率等级计算", width=20) 
+    open_fix_cap_button = ttk.Button(root, text="频率等级计算", width=20,) 
     open_fix_cap_button.pack(pady=10)
     
     open_fix_cap_button = ttk.Button(root, text="阻抗计算器", width=20) 

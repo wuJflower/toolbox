@@ -7,7 +7,7 @@ ttk.Style().configure("Custom.TButton", background="lightblue",  font=("Arial", 
 
 # 创建主窗口
 root = tk.Tk()
-root.title("电容校准文件转换工具")
+root.title("工具箱")
 root.geometry("500x300")
 # 设置背景颜色
 root.configure(bg='lightblue')
@@ -17,14 +17,18 @@ def open_file_picker():
     input_button.configure(text=file_path)
     file  = filedialog.Open(file_path)
 
-def delete_all_widgets():
-    # 遍历 root 窗口中的所有子控件并销毁
+def destroy_root():
     for widget in root.winfo_children():
         widget.destroy()
 
+def back2home():
+    # 遍历 root 窗口中的所有子控件并销毁
+    destroy_root()
+    init_home()
+
 def fix_cap_file():
-    
-    destroy_button = ttk.Button(root, text="返回", width=10, command=delete_all_widgets)
+    destroy_root()
+    destroy_button = ttk.Button(root, text="返回", width=10, command=back2home)
     destroy_button.pack(padx=0)
 
     # 设置大标题
@@ -70,9 +74,22 @@ def fix_cap_file():
     quantity_entry = ttk.Entry(frame2, width=15)
     quantity_entry.grid(row=1, column=1, padx=10)
 
+def init_home():
+    destroy_root()
+    open_fix_cap_button = ttk.Button(root, text="电容文件转换", width=20, command=fix_cap_file) 
+    open_fix_cap_button.pack(pady=10)
+    
+    open_fix_cap_button = ttk.Button(root, text="VPP计算", width=20) 
+    open_fix_cap_button.pack(pady=10)
+    
+    open_fix_cap_button = ttk.Button(root, text="频率等级计算", width=20) 
+    open_fix_cap_button.pack(pady=10)
+    
+    open_fix_cap_button = ttk.Button(root, text="阻抗计算器", width=20) 
+    open_fix_cap_button.pack(pady=10)
+    
 
-
-fix_cap_file()
+init_home()
 
 
 root.mainloop()

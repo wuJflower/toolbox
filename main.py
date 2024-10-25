@@ -5,6 +5,13 @@ from capLevel import init_speed_level
 
 ttk.Style().configure("Custom.TButton", background="lightblue",  font=("Arial", 15))
 
+# data
+
+speed_levels  = [0,0,0,0,0,0,0,0,0]
+level_str =tk.StringVar()
+level_str.set("有效速度等级：")
+#func
+
 
 # 创建主窗口
 root = tk.Tk()
@@ -13,33 +20,41 @@ root.geometry("500x300")
 # 设置背景颜色
 root.configure(bg='lightblue')
 
+left = tk.Frame(root, bg='lightblue')
+left.pack(side=tk.LEFT, padx=10, pady=10)
+right = tk.Frame(root, bg='lightblue')
+right.pack(side=tk.RIGHT, padx=10, pady=10)
+
+
 def open_file_picker():
     file_path = filedialog.askopenfilename()
     input_button.configure(text=file_path)
     file  = filedialog.Open(file_path)
 
-def destroy_root():
-    for widget in root.winfo_children():
+def destroy_root(self):
+    for widget in self.winfo_children():
         widget.destroy()
 
 def back2home():
     # 遍历 root 窗口中的所有子控件并销毁
-    destroy_root()
+    destroy_root(right)
     init_home()
 
 def fix_cap_file():
-    destroy_root()
-    destroy_button = ttk.Button(root, text="返回", width=10, command=back2home)
-    destroy_button.pack(padx=0)
+    destroy_root(right)
+
+    head = tk.Frame(right)
+    head.pack(pady=10)
 
     # 设置大标题
-    title_label = ttk.Label(root, text="电容校准文件转换工具", font=("Arial", 14), style="Custom.TButton")
-    title_label.pack(pady=10)
+    title_label = ttk.Label(head, text="电容校准文件转换工具", font=("Arial", 14), style="Custom.TButton")
+    title_label.grid(row=0, column=0, padx=10)
 
-
+    destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
+    destroy_button.grid(row=0, column=1, padx=10)
 
     # 输入框和选择按钮
-    frame1 = tk.Frame(root)
+    frame1 = tk.Frame(right)
     frame1.pack(pady=10)
     frame1.configure(bg='lightblue')
 
@@ -54,11 +69,11 @@ def fix_cap_file():
 
 
     # 提示输入
-    instruction_label = ttk.Label(root, text="请输入并联电容:", font=("Arial", 12) )
+    instruction_label = ttk.Label(right, text="请输入并联电容:", font=("Arial", 12) )
     instruction_label.pack(pady=10)
 
     # 容值和数量输入
-    frame2 = tk.Frame(root)
+    frame2 = tk.Frame(right)
     frame2.pack(pady=10)
     frame2.configure(bg='lightblue')
 
@@ -75,18 +90,81 @@ def fix_cap_file():
     quantity_entry = ttk.Entry(frame2, width=15)
     quantity_entry.grid(row=1, column=1, padx=10)
 
+def create_vpp_page():
+    destroy_root(right)
+    head = tk.Frame(right)
+    head.pack(pady=10)
+
+    # 设置大标题
+    title_label = ttk.Label(head, text="VPP计算工具", font=("Arial", 14), style="Custom.TButton")
+    title_label.grid(row=0, column=0, padx=10)
+
+    destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
+    destroy_button.grid(row=0, column=1, padx=10)
+
+
+
+
+
+# 定义验证函数
+def validate_input(freq):
+    if freq.isdigit() == True :
+        level = 0
+        index = 0
+        # 待修复bug
+        while(float(freq * pow(2,level)) <50):
+            speed_levels[index] = level
+            index += 1
+            current=level_str.get()
+            level_str.set(current + str(level) + ",")
+            level += 1
+
+        return True
+    return False  # 仅当输入是数字时返回 True
+
+# 注册验证函数
+vcmd = (root.register(validate_input), '%P')  # '%P' 表示输入后的内容
+
+def create_speed_level():
+    destroy_root(right)
+    
+    head = tk.Frame(right)
+    head.pack(pady=10)
+
+    # 设置大标题
+    title_label = ttk.Label(head, text="速度等级计算工具", font=("Arial", 14), style="Custom.TButton")
+    title_label.grid(row=0, column=0, padx=10)
+
+    destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
+    destroy_button.grid(row=0, column=1, padx=10)
+
+    frame1 = tk.Frame(right)
+    frame1.pack(pady=2)
+
+    tk.Label(frame1, text="输入频率/Mhz:").grid(row=0, column=0, padx=10)
+    tk.Entry(frame1, width=20,validate="key", validatecommand=vcmd).grid(row=0, column=1, padx=10)
+
+
+    frame2 = tk.Frame(right)
+    frame2.pack(pady=2)
+
+    tk.Label(frame2, textvariable=level_str).grid(row=0, column=0, padx=10)
+    
+
+
+
 def init_home():
-    destroy_root()
-    open_fix_cap_button = ttk.Button(root, text="电容文件转换", width=20, command=fix_cap_file) 
+    destroy_root(left)
+    open_fix_cap_button = ttk.Button(left, text="电容文件转换", width=20, command=fix_cap_file) 
     open_fix_cap_button.pack(pady=10)
     
-    open_fix_cap_button = ttk.Button(root, text="VPP计算", width=20) 
+    open_fix_cap_button = ttk.Button(left, text="VPP计算", width=20,command=create_vpp_page) 
     open_fix_cap_button.pack(pady=10)
     
-    open_fix_cap_button = ttk.Button(root, text="频率等级计算", width=20,) 
+    open_fix_cap_button = ttk.Button(left, text="频率等级计算", width=20, command=create_speed_level) 
     open_fix_cap_button.pack(pady=10)
     
-    open_fix_cap_button = ttk.Button(root, text="阻抗计算器", width=20) 
+    open_fix_cap_button = ttk.Button(left, text="阻抗计算器", width=20) 
     open_fix_cap_button.pack(pady=10)
     
 

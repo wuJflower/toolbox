@@ -173,5 +173,5 @@ def init_home():
 
 init_home()
 
-
-root.mainloop()
+if __name__ == "__main__":
+    root.mainloop()

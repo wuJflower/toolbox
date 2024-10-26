@@ -17,13 +17,16 @@ level_str.set("有效速度等级：")
 root = tk.Tk()
 root.title("工具箱")
 root.geometry("500x300")
-# 设置背景颜色
 root.configure(bg='lightblue')
 
+root.resizable(False, False)
+
+# 左右布局
 left = tk.Frame(root, bg='lightblue')
-left.pack(side=tk.LEFT, padx=10, pady=10)
-right = tk.Frame(root, bg='lightblue')
-right.pack(side=tk.RIGHT, padx=10, pady=10)
+left.pack(side=tk.LEFT, padx=2, pady=10)
+right = tk.Frame(root, bg='lightblue',bd=5,relief="ridge")
+right.pack(side=tk.RIGHT,padx=10, pady=2)
+
 
 
 def open_file_picker():
@@ -148,7 +151,7 @@ def create_speed_level():
     frame2 = tk.Frame(right)
     frame2.pack(pady=2)
 
-    tk.Label(frame2, textvariable=level_str).grid(row=0, column=0, padx=10)
+    tk.Label(frame2, textvariable=level_str).grid( row=0, column=0, padx=10)
     
 
 

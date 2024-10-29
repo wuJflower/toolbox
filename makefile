@@ -6,6 +6,7 @@ remote_branch = freqSpeedLevel
 local_branch = freq
 
 
+
 # 添加远程仓库
 add_remote:
 	git  remote add $(remote_name)  $(remote_url)
@@ -33,3 +34,15 @@ push:pull
 
 
 
+
+# 通过代理ttkbootstrap 库安装
+ttkbootstrap:
+	pip install ttkbootstrap  -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+# 生成exe可执行文件,相对路径
+main_file = main.py
+
+exe:
+	pip install pyinstaller
+	pyinstaller --onefile --noconsole   $(main_file)

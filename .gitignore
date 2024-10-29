@@ -1,2 +1,14 @@
+
 __pycache__
+.pyc
+
+# python打包 中间wenjian
+build
+dist
+
+# pyinstaller 打包后文件
+*.spec
+
+
+
 

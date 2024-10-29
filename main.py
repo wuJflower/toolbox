@@ -1,15 +1,13 @@
 import tkinter as tk
 from tkinter import filedialog
-from tkinter import ttk
+
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 from capLevel import init_speed_level
 
-ttk.Style().configure("Custom.TButton", background="lightblue",  font=("Arial", 15))
 
 # data
 
-speed_levels  = [0,0,0,0,0,0,0,0,0]
-level_str =tk.StringVar()
-level_str.set("有效速度等级：")
 #func
 
 

@@ -14,6 +14,11 @@ add_remote:
 fork_remote:add_remote
 	git checkout  -b $(local_branch) $(remote_name)/$(remote_branch)
 
+# 更新 本地仓库到远程仓库
+git push origin  freqSpeedLevel
+
+
+
 
 
 

@@ -12,18 +12,24 @@ from capLevel import init_speed_level
 
 
 # 创建主窗口
-root = tk.Tk()
+root = ttk.Window(themename="superhero")
 root.title("工具箱")
-root.geometry("500x300")
+root.geometry("1000x400")
 root.configure(bg='lightblue')
 
 root.resizable(False, False)
 
 # 左右布局
 left = tk.Frame(root, bg='lightblue')
-left.pack(side=tk.LEFT, padx=2, pady=10)
-right = tk.Frame(root, bg='lightblue',bd=5,relief="ridge")
-right.pack(side=tk.RIGHT,padx=10, pady=2)
+right = tk.Frame(root)
+
+
+
+left.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
+right.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
+
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=3)
 
 
 

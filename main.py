@@ -14,7 +14,7 @@ from capLevel import init_speed_level
 # 创建主窗口
 root = ttk.Window(themename="superhero")
 root.title("工具箱")
-root.geometry("1000x400")
+root.geometry("1500x1100")
 root.configure(bg='lightblue')
 
 root.resizable(False, False)
@@ -30,6 +30,8 @@ right.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
 
 root.grid_columnconfigure(0, weight=1)
 root.grid_columnconfigure(1, weight=3)
+
+root.grid_rowconfigure(0,weight=1)
 
 
 
@@ -63,7 +65,6 @@ def fix_cap_file():
     # 输入框和选择按钮
     frame1 = tk.Frame(right)
     frame1.pack(pady=10)
-    frame1.configure(bg='lightblue')
 
     input_button = ttk.Button(frame1, text="输入框", width=20)
     input_button.grid(row=0, column=0, padx=10)
@@ -72,7 +73,7 @@ def fix_cap_file():
     select_button.grid(row=0, column=1, padx=10)
 
     resize_cap_frame =  ttk.Frame(root)
-    resize_cap_frame.pack(pady=10)
+    resize_cap_frame.grid(row=1,column=0)
 
 
     # 提示输入
@@ -82,7 +83,6 @@ def fix_cap_file():
     # 容值和数量输入
     frame2 = tk.Frame(right)
     frame2.pack(pady=10)
-    frame2.configure(bg='lightblue')
 
     capacitance_label = ttk.Label(frame2, text="容值/pF", font=("Arial", 12), )
     capacitance_label.grid(row=0, column=0, padx=10)
@@ -109,6 +109,10 @@ def create_vpp_page():
     destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
     destroy_button.grid(row=0, column=1, padx=10)
 
+    # 设置大标题
+    title_label = ttk.Label(head, text="待开发", font=("Arial", 14),style="Custom.TButton", bootstyle=DANGER)
+    title_label.grid(row=1, column=0, padx=10)
+    
 
 
 
@@ -157,7 +161,19 @@ def create_speed_level():
 
     tk.Label(frame2, textvariable=level_str).grid( row=0, column=0, padx=10)
     
+def create_z_cal():
+    
+    destroy_root(right)
+    
+    head = tk.Frame(right)
+    head.pack(pady=10)
 
+    # 设置大标题
+    title_label = ttk.Label(head, text="阻抗计算器", font=("Arial", 14), style="Custom.TButton")
+    title_label.grid(row=0, column=0, padx=10)
+
+    destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
+    destroy_button.grid(row=0, column=1, padx=10)
 
 
 def init_home():
@@ -171,7 +187,7 @@ def init_home():
     open_fix_cap_button = ttk.Button(left, text="频率等级计算", width=20, command=create_speed_level) 
     open_fix_cap_button.pack(pady=10)
     
-    open_fix_cap_button = ttk.Button(left, text="阻抗计算器", width=20) 
+    open_fix_cap_button = ttk.Button(left, text="阻抗计算器", width=20,command=create_z_cal) 
     open_fix_cap_button.pack(pady=10)
     
 

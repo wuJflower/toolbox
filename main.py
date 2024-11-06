@@ -36,9 +36,8 @@ root.grid_rowconfigure(0,weight=1)
 
 
 def open_file_picker():
-    file_path = filedialog.askopenfilename()
-    input_button.configure(text=file_path)
-    file  = filedialog.Open(file_path)
+    file_path = filedialog.askopenfilename() 
+    print(file_path)
 
 def destroy_root(self):
     for widget in self.winfo_children():
@@ -49,14 +48,14 @@ def back2home():
     destroy_root(right)
     init_home()
 
-def fix_cap_file():
+def create_fix_cap_page():
     destroy_root(right)
 
     head = tk.Frame(right)
     head.pack(pady=10)
 
     # 设置大标题
-    title_label = ttk.Label(head, text="电容校准文件转换工具", font=("Arial", 14), style="Custom.TButton")
+    title_label = ttk.Label(head, text="电容校准文件转换工具", font=("Arial", 14))
     title_label.grid(row=0, column=0, padx=10)
 
     destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
@@ -74,6 +73,10 @@ def fix_cap_file():
 
     resize_cap_frame =  ttk.Frame(root)
     resize_cap_frame.grid(row=1,column=0)
+
+    # 1、检验 选择的校准文件内容适合正确
+   
+
 
 
     # 提示输入
@@ -96,6 +99,26 @@ def fix_cap_file():
 
     quantity_entry = ttk.Entry(frame2, width=15)
     quantity_entry.grid(row=1, column=1, padx=10)
+
+    add = ttk.Button(frame2,text="计算",width= 10,command= lambda :add_cap_val(capacitance_entry.get(),quantity_entry.get()))
+    add.grid(row=1 , column = 2,pady=10)
+    
+
+    # 2、点击按钮计算并联电容的容值C1 pF
+
+    # 3、把校准文件的自101行开始，每一行加上C1*1000
+
+# 计算并联总容值
+def add_cap_val(cap_val:str , count :str):
+    
+
+    # 校验输入参数str 是否都是数字，不是则弹窗提示
+
+    show = ttk.Label(right,text=str(int(float(cap_val)*float(count))*1000))
+    show.pack(pady=10)
+
+     
+
 
 def create_vpp_page():
     destroy_root(right)
@@ -178,7 +201,7 @@ def create_z_cal():
 
 def init_home():
     destroy_root(left)
-    open_fix_cap_button = ttk.Button(left, text="电容文件转换", width=20, command=fix_cap_file) 
+    open_fix_cap_button = ttk.Button(left, text="电容文件转换", width=20, command=create_fix_cap_page) 
     open_fix_cap_button.pack(pady=10)
     
     open_fix_cap_button = ttk.Button(left, text="VPP计算", width=20,command=create_vpp_page) 

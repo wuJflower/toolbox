@@ -8,6 +8,7 @@ dist
 
 # pyinstaller 打包后文件
 *.spec
+*.exe
 
 
 

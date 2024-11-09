@@ -39,6 +39,8 @@ push:pull
 ttkbootstrap:
 	pip install ttkbootstrap  -i https://pypi.tuna.tsinghua.edu.cn/simple
 
+messagebox:
+	pip install  tkmessagebox  -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 生成exe可执行文件,相对路径
 main_file = main.py

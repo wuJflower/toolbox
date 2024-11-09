@@ -27,10 +27,19 @@ cap_result_file_path = ""
 # 创建主窗口
 root = ttk.Window(themename="superhero")
 root.title("工具箱")
-root.geometry("1500x1100")
+# 获取屏幕分辨率
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+# 设置窗口大小为屏幕宽度的 80% 和高度的 60%
+window_width = int(screen_width * 0.8)
+window_height = int(screen_height * 0.6)
+root.geometry(f"{window_width}x{window_height}")
+
+
 root.configure(bg='lightblue') 
 
-root.resizable(False, True)
+# root.resizable(False, True)
 
 # 左右布局
 left = tk.Frame(root, bg='lightblue')

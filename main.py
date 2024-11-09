@@ -35,6 +35,8 @@ screen_height = root.winfo_screenheight()
 window_width = int(screen_width * 0.8)
 window_height = int(screen_height * 0.6)
 root.geometry(f"{window_width}x{window_height}")
+# 设置最小尺寸
+root.wm_minsize(int(window_width*0.5), int(window_height*0.5))
 
 
 root.configure(bg='lightblue') 
@@ -199,6 +201,7 @@ def add_cap(cap_val:str , count :str):
     cap_value_list.append([(cap_val,count)])
     
     """ #View """
+    # 这个 页面 和 显示校准文件 形成左右布局，待更改
     frame = ttk.Frame(right)
     # 全局链表便于页面增删
     # 可以考虑 全局所有页面都存储起来，然后通过index来删除（解决 button 不能传 Frame参数
@@ -215,6 +218,7 @@ def add_cap(cap_val:str , count :str):
     ttk.Button(frame,text="删除",width= 10,command= lambda:delete_frame(index)).grid(row=0 , column = 2,pady=10)
     frame.pack(pady=10)
 
+# 删除指定页面组件
 def delete_frame(index:int):
     # Model
 
@@ -281,14 +285,14 @@ def create_vpp_page():
     head.pack(pady=10)
 
     # 设置大标题
-    title_label = ttk.Label(head, text="VPP计算工具", font=("Arial", 14), style="Custom.TButton")
+    title_label = ttk.Label(head, text="VPP计算工具", font=("Arial", 14) )
     title_label.grid(row=0, column=0, padx=10)
 
     destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
     destroy_button.grid(row=0, column=1, padx=10)
 
     # 设置大标题
-    title_label = ttk.Label(head, text="待开发", font=("Arial", 14),style="Custom.TButton", bootstyle=DANGER)
+    title_label = ttk.Label(head, text="待开发", font=("Arial", 14) , bootstyle=DANGER)
     title_label.grid(row=1, column=0, padx=10)
     
 

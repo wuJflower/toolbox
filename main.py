@@ -50,10 +50,13 @@ root.configure(bg='lightblue')
 left = tk.Frame(root, bg='lightblue')
 right = tk.Frame(root)
 
+cap_list_frame = tk.Frame(right)
+
 
 cap_inpout = tk.Frame(right)
 frame = ttk.Frame(right)
 cap_list = [(0,frame)]
+cap_sum_label = ttk.Label(right,text="")
 
 
 left.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
@@ -153,7 +156,7 @@ def create_fix_cap_page():
 
     input_file_name.grid(row=0, column=0, padx=10)
 
-    select_button = ttk.Button(frame1, text="选择", width=10,command=open_file_picker)
+    select_button = ttk.Button(frame1, text="1、选择", width=10,command=open_file_picker)
     select_button.grid(row=0, column=1, padx=10)
 
     resize_cap_frame =  ttk.Frame(root)
@@ -185,14 +188,18 @@ def create_fix_cap_page():
     quantity_entry = ttk.Entry(cap_inpout, width=15)
     quantity_entry.grid(row=1, column=1, padx=10)
 
-    add = ttk.Button(cap_inpout,text="添加",width= 10,command= lambda :add_cap(capacitance_entry.get(),quantity_entry.get()))
+    add = ttk.Button(cap_inpout,text="2、添加",width= 10,command= lambda :add_cap(capacitance_entry.get(),quantity_entry.get()))
     add.grid(row=1 , column = 2,pady=10)
 
-    add = ttk.Button(cap_inpout,text="计算并保存",width= 10,command= lambda :cal_and_save(capacitance_entry.get(),quantity_entry.get()))
+    add = ttk.Button(cap_inpout,text="3、计算并保存",width= 15,command= lambda :cal_and_save(capacitance_entry.get(),quantity_entry.get()))
     add.grid(row=2 , column = 2,pady=10)
 
-    open = ttk.Button(cap_inpout,text="打开文件",width= 10,command= lambda:open_file(cap_result_file_path))
+    open = ttk.Button(cap_inpout,text="4、打开文件",width= 10,command= lambda:open_file(cap_result_file_path))
     open.grid(row=2 , column = 1,pady=10)
+
+    global cap_list_frame
+    cap_list_frame = ttk.Frame(cap_inpout)
+    cap_list_frame.grid(row=3 ,column=0,pady=10)
     
     
 
@@ -237,7 +244,7 @@ def add_cap(cap_val:str , count :str):
     # 这个 页面 和 显示校准文件 形成左右布局，待更改
     # 需要固定和 显示校准文件关系
     # bug
-    frame = ttk.Frame(right)
+    frame = ttk.Frame(cap_list_frame)
     # 全局链表便于页面增删
     # 可以考虑 全局所有页面都存储起来，然后通过index来删除（解决 button 不能传 Frame参数
     global cap_list
@@ -281,11 +288,11 @@ def cal_and_save(cap_val:str , count :str):
     # 待解决 检测字符串是否是数字
     # assert cap_val.isdigit() == True and count.isdigit() == True, "请输入整数"
 
-    # Model
-    global single_cal_file
-    
 
-    # 所有并联电容值总和
+    # Model
+    global content
+    # 1、所有并联电容值总和
+
     total_of_parallel_caps  = 0.0
     # 计算cap的和
     for i in cap_value_list:
@@ -293,18 +300,23 @@ def cal_and_save(cap_val:str , count :str):
         total_of_parallel_caps += round(float(i[0][1]),3)*float(i[0][2])*1000
 
     total_of_parallel_caps = int(total_of_parallel_caps)
+
+    # 2、计算并联电容综合 依次加到电容值上
     cap_start_line = 101
     cap_end_line = 200
 
 
+    # bug  重复点击会在上次结果进行累积计算
+    # 直接用原始数据做 计算
     for i in range(cap_start_line,cap_end_line-1):
-        single_cal_file[i]=str(int(single_cal_file[i])+total_of_parallel_caps)+"\n"
+        single_cal_file[i]=str(int(content[i])+total_of_parallel_caps)+"\n"
     # 最后一个 不需要换行
-    single_cal_file[cap_end_line]=str(int(single_cal_file[cap_end_line])+total_of_parallel_caps)
+    single_cal_file[cap_end_line]=str(int(content[cap_end_line])+total_of_parallel_caps)
         
     # view
-    show = ttk.Label(right,text=str(int(total_of_parallel_caps)))
-    show.pack(pady=10)
+    global cap_sum_label
+    cap_sum_label = ttk.Label(right,text=str(int(total_of_parallel_caps)))
+    cap_sum_label.pack(pady=10)
 
     #Control
     # Save to file

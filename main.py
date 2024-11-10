@@ -197,9 +197,15 @@ def create_fix_cap_page():
     open = ttk.Button(cap_inpout,text="4、打开文件",width= 10,command= lambda:open_file(cap_result_file_path))
     open.grid(row=2 , column = 1,pady=10)
 
+
+    # grid 格局占据一整行，固定电容总和位置
+    global cap_sum_label
+    cap_sum_label = ttk.Label(cap_inpout, text="并联电容容值总和：", font=("Arial", 12) )
+    cap_sum_label.grid(row=3, column=0, columnspan=3, padx=10)
+
     global cap_list_frame
     cap_list_frame = ttk.Frame(cap_inpout)
-    cap_list_frame.grid(row=3 ,column=0,pady=10)
+    cap_list_frame.grid(row=4 ,column=0,columnspan=3,pady=10)
     
     
 
@@ -315,8 +321,7 @@ def cal_and_save(cap_val:str , count :str):
         
     # view
     global cap_sum_label
-    cap_sum_label = ttk.Label(right,text=str(int(total_of_parallel_caps)))
-    cap_sum_label.pack(pady=10)
+    cap_sum_label.config(text=f"并联电容容值总和：{total_of_parallel_caps}")
 
     #Control
     # Save to file

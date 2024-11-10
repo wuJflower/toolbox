@@ -24,6 +24,9 @@ cap_index = 0
 cap_result_file_path = ""
 
 
+FILE_SHOW_INDEX = 999
+LABEL_INPUT_FILE = 1000
+
 # 创建主窗口
 root = ttk.Window(themename="superhero")
 root.title("工具箱")
@@ -63,7 +66,8 @@ root.grid_rowconfigure(0,weight=1)
 
 
 
-
+# 打开单电容校准文件、多电容校准文件，
+# 多电容校准文件，只计算保存第一个电容的校准数据
 def open_file_picker():
     file_path = filedialog.askopenfilenames(
         title="选择txt 格式的校准文件",
@@ -72,9 +76,21 @@ def open_file_picker():
     if file_path:
         global cap_file_read
         cap_file_read = True
+
         
+        global cap_list
+        
+        # 修复重复创建text_widget bug
+        for i in cap_list:
+            if i[0] == FILE_SHOW_INDEX:
+                list_index = cap_list.index(i)
+                i[1].destroy()
+                cap_list.pop(list_index)
+            if i[0] == LABEL_INPUT_FILE:
+                pass
+
         # bug，暂时无法提取文件名，用于显示
-        print(re.match(r'^[\w-]+\.txt$',file_path[0]))
+        print(re.match(r'[^\\/]+$',file_path[0]))
 
         with open(file_path[0], 'r') as file:
             # 单电容校准文件格式
@@ -87,6 +103,9 @@ def open_file_picker():
             single_cal_file = content[0:201]
 
             text_widget = ttk.Text(right, wrap=WORD,width=40,height=10)
+            
+            cap_list.append((FILE_SHOW_INDEX,text_widget))
+
             text_widget.pack(pady=10)
             content = [line.strip() for line in content]
             text_widget.insert(END, "\n".join(content))
@@ -124,8 +143,15 @@ def create_fix_cap_page():
     frame1 = tk.Frame(right)
     frame1.pack(pady=10)
 
-    input_button = ttk.Button(frame1, text="输入框", width=40)
-    input_button.grid(row=0, column=0, padx=10)
+    # 这个Label可用于展示
+    input_file_name = ttk.Label(frame1, text="暂未输入文件", width=40)
+
+    # 保存句柄，在打开文件后更新文件名
+    global cap_list
+    cap_list.append((LABEL_INPUT_FILE,input_file_name))
+
+
+    input_file_name.grid(row=0, column=0, padx=10)
 
     select_button = ttk.Button(frame1, text="选择", width=10,command=open_file_picker)
     select_button.grid(row=0, column=1, padx=10)
@@ -186,6 +212,9 @@ def open_file(file_path:str):
 def add_cap(cap_val:str , count :str):
 
     """  校验 """
+    """ 输入数据要求
+     cap_val 为非负数即可
+      count  必须为非负整数 """
     
     if cap_val == "" or count == "":
         messagebox.showwarning("提示", "请输入容值和数量")
@@ -198,17 +227,20 @@ def add_cap(cap_val:str , count :str):
     
 
     """ # Model """
-    cap_value_list.append([(cap_val,count)])
     
-    """ #View """
+    global cap_index
+    cap_index += 1
+    index = cap_index
+    cap_value_list.append([(index,cap_val,count)])
+    
+    """ # View """
     # 这个 页面 和 显示校准文件 形成左右布局，待更改
+    # 需要固定和 显示校准文件关系
+    # bug
     frame = ttk.Frame(right)
     # 全局链表便于页面增删
     # 可以考虑 全局所有页面都存储起来，然后通过index来删除（解决 button 不能传 Frame参数
     global cap_list
-    global cap_index
-    cap_index += 1
-    index = cap_index
     cap_list.append((index,frame))
 
     ttk.Label(frame,text=cap_val, width=15).grid(row=0, column=0, padx=10)
@@ -230,6 +262,13 @@ def delete_frame(index:int):
             i[1].destroy()
             cap_list.pop(list_index)
 
+    # bug 删除了组件但是没有删除数据
+    global cap_value_list
+    for i in cap_value_list:
+        if i[0][0] == index :
+            val_index = cap_value_list.index(i)
+            cap_value_list.pop(val_index)
+
 
 # 计算并联总容值
 def cal_and_save(cap_val:str , count :str):
@@ -247,12 +286,13 @@ def cal_and_save(cap_val:str , count :str):
     
 
     # 所有并联电容值总和
-    total_of_parallel_caps  = 0
+    total_of_parallel_caps  = 0.0
     # 计算cap的和
     for i in cap_value_list:
-        total_of_parallel_caps += int(float(i[0][0])*float(i[0][1]))*1000
+        # bug 第一个电容值的小数位会被忽略,只要小数点后三位
+        total_of_parallel_caps += round(float(i[0][1]),3)*float(i[0][2])*1000
 
-    
+    total_of_parallel_caps = int(total_of_parallel_caps)
     cap_start_line = 101
     cap_end_line = 200
 

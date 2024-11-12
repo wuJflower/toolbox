@@ -44,7 +44,14 @@ messagebox:
 
 # 生成exe可执行文件,相对路径
 main_file = main.py
+exe_file_name = ToolBox.exe
 
+
+
+open:
+	./dist/$(exe_file_name)
 exe:
 	pip install pyinstaller
-	pyinstaller --onefile --noconsole   $(main_file)
+	pyinstaller --onefile --noconsole  -n  $(exe_file_name) $(main_file) 
+# vsc 插件
+# git-commit-lint-vscode

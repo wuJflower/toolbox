@@ -424,6 +424,8 @@ def init_home():
     
     open_fix_cap_button = ttk.Button(left, text="阻抗计算器(待完成)", width=20,command=create_z_cal) 
     open_fix_cap_button.pack(pady=10)
+
+    ttk.Label(left, text="Power By WuWei",foreground="#FAF0E6",font=("Helvetica", 16)).pack(side="bottom", pady=(0, 30))
     
 
 init_home()

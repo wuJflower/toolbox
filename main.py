@@ -21,7 +21,7 @@ cap_value_list = []
 cap_file_read = False
 cap_index = 0
 
-cap_result_file_path = ""
+file_path = ""
 
 
 FILE_SHOW_INDEX = 999
@@ -128,8 +128,8 @@ def create_fix_cap_page():
     cap_file_read = False
     global cap_index
     cap_index = 0
-    global cap_result_file_path
-    cap_result_file_path = ""
+    global file_path
+    file_path = ""
 
 
     head = tk.Frame(right)
@@ -194,7 +194,7 @@ def create_fix_cap_page():
     add = ttk.Button(cap_inpout,text="3、计算并保存",width= 15,command= lambda :cal_and_save(capacitance_entry.get(),quantity_entry.get()))
     add.grid(row=2 , column = 2,pady=10)
 
-    open = ttk.Button(cap_inpout,text="4、打开文件",width= 10,command= lambda:open_file(cap_result_file_path))
+    open = ttk.Button(cap_inpout,text="4、打开文件",width= 10,command= lambda:open_file(file_path))
     open.grid(row=2 , column = 1,pady=10)
 
 
@@ -206,7 +206,6 @@ def create_fix_cap_page():
     global cap_list_frame
     cap_list_frame = ttk.Frame(cap_inpout)
     cap_list_frame.grid(row=4 ,column=0,columnspan=3,pady=10)
-    
     
 
     # 2、点击按钮计算并联电容的容值C1 pF
@@ -323,16 +322,26 @@ def cal_and_save(cap_val:str , count :str):
     global cap_sum_label
     cap_sum_label.config(text=f"并联电容容值总和：{total_of_parallel_caps}")
 
+    
+    
     #Control
     # Save to file
     # 保存content 变量 到txt文件
-    global cap_result_file_path
-    cap_result_file_path = "calibration.txt"
-    with open(cap_result_file_path, "w") as file:
-        # 清空file
-        file.writelines("")
-        file.writelines(single_cal_file)
-
+    # 打开保存文件对话框
+    global file_path
+    file_path = filedialog.asksaveasfilename(
+        defaultextension=".txt",                # 默认文件扩展名
+        filetypes=[("Text files", "*.txt"), ("All files", "*.*")],  # 文件类型
+        title="保存文件"
+    )
+    # 检查用户是否选择了文件路径
+    if file_path:
+        # 将内容保存到指定路径
+        with open(file_path, "w") as file:
+            # 清空file
+            file.writelines("")
+            # 把数据写入file
+            file.writelines(single_cal_file)
      
 
 

@@ -58,6 +58,7 @@ frame = ttk.Frame(right)
 cap_list = [(0,frame)]
 cap_sum_label = ttk.Label(right,text="")
 
+input_file_name = ttk.Label(right, text="暂未输入文件", width=40)
 
 left.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
 right.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
@@ -93,8 +94,14 @@ def open_file_picker():
                 pass
 
         # bug，暂时无法提取文件名，用于显示
-        print(re.match(r'[^\\/]+$',file_path[0]))
-
+        # fix 修复提取文件名
+        if(os.path.splitext(os.path.basename(file_path[0]))[1].lower() != ".txt"):
+            messagebox.showerror("错误", "请选择txt格式的电容校准文件")
+            return
+        messagebox.showinfo("提示", "已选择文件："+os.path.splitext(os.path.basename(file_path[0]))[0].lower()+os.path.splitext(os.path.basename(file_path[0]))[1].lower())
+        global input_file_name
+        input_file_name.config(text=os.path.splitext(os.path.basename(file_path[0]))[0].lower()+os.path.splitext(os.path.basename(file_path[0]))[1].lower())
+        
         with open(file_path[0], 'r') as file:
             # 单电容校准文件格式
             # 数字 + 100个编码器位置 + 100个电容值位置
@@ -146,6 +153,7 @@ def create_fix_cap_page():
     frame1 = tk.Frame(right)
     frame1.pack(pady=10)
 
+    global input_file_name
     # 这个Label可用于展示
     input_file_name = ttk.Label(frame1, text="暂未输入文件", width=40)
 

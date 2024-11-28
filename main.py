@@ -10,6 +10,8 @@ import re
 import os
 import platform
 
+from enum import Enum
+
 # data
 
 #func
@@ -22,6 +24,17 @@ cap_file_read = False
 cap_index = 0
 
 file_path = ""
+
+# 密码确认页面打开页面索引
+# 创建枚举类型 0,VPP;1，速度等级；2，阻抗计算；from enum import Enum
+# 新增 需要鉴权页面则需要新增枚举类型
+
+class PAGE_INDEX(Enum):
+    PAGE_INDEX_VPP = 0
+    PAGE_INDEX_SPEED_LEVEL = 1
+    PAGE_INDEX_IMPEDANCE_CALCULATION = 2
+
+page_index = PAGE_INDEX.PAGE_INDEX_VPP.value
 
 
 FILE_SHOW_INDEX = 999
@@ -368,8 +381,6 @@ def create_vpp_page():
     # 设置大标题
     title_label = ttk.Label(head, text="待开发", font=("Arial", 14) , bootstyle=DANGER)
     title_label.grid(row=1, column=0, padx=10)
-    
-
 
 def create_speed_level():
     destroy_root(right)
@@ -410,19 +421,60 @@ def create_z_cal():
     destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
     destroy_button.grid(row=0, column=1, padx=10)
 
+def open_page():
+    if page_index == PAGE_INDEX.PAGE_INDEX_VPP.value:
+        create_vpp_page()
+    elif page_index == PAGE_INDEX.PAGE_INDEX_SPEED_LEVEL.value:
+        create_speed_level()
+    elif page_index == PAGE_INDEX.PAGE_INDEX_IMPEDANCE_CALCULATION.value:
+        create_z_cal()
+    pass
+
+def create_auth_page(index ):
+    
+    destroy_root(right)
+
+    # 校验输入index在PAEGE_INDEX范围内
+    if index < 0 or index >= len(PAGE_INDEX):
+        messagebox.showwarning("提示", "打开错误页面")
+
+
+    # Model 层
+    global page_index
+    page_index = index
+
+    # View 层
+    head = tk.Frame(right)
+    head.pack(pady=10)
+    
+    
+    title_label = ttk.Label(head, text="请输入密码", font=("Arial", 14))
+    title_label.grid(row=0, column=0, padx=10)
+    destroy_button = ttk.Button(head, text="X", width=10, command=back2home)
+    destroy_button.grid(row=0, column=1, padx=10)
+
+    body = tk.Frame(right)
+    body.pack(pady=2)
+
+    ttk.Label(body,text="密码：").grid(row=0,column=0,padx=10)
+    pwd_entry = ttk.Entry(body, width=20)
+    ttk.Button(body,text="打开",command=open_page).grid(row=0,column=1,padx=10)
+
+    
+
 
 def init_home():
     destroy_root(left)
     open_fix_cap_button = ttk.Button(left, text="单电容文件转换", width=20, command=create_fix_cap_page) 
     open_fix_cap_button.pack(pady=10)
     
-    open_fix_cap_button = ttk.Button(left, text="VPP计算(待完成)", width=20,command=create_vpp_page) 
+    open_fix_cap_button = ttk.Button(left, text="VPP计算(待完成)", width=20,command=lambda: create_auth_page(PAGE_INDEX.PAGE_INDEX_VPP.value)) 
     open_fix_cap_button.pack(pady=10)
     
-    open_fix_cap_button = ttk.Button(left, text="频率等级计算(待完成)", width=20, command=create_speed_level) 
+    open_fix_cap_button = ttk.Button(left, text="频率等级计算(待完成)", width=20, command=lambda: create_auth_page(PAGE_INDEX.PAGE_INDEX_SPEED_LEVEL.value)) 
     open_fix_cap_button.pack(pady=10)
     
-    open_fix_cap_button = ttk.Button(left, text="阻抗计算器(待完成)", width=20,command=create_z_cal) 
+    open_fix_cap_button = ttk.Button(left, text="阻抗计算器(待完成)", width=20,command=lambda: create_auth_page(PAGE_INDEX.PAGE_INDEX_IMPEDANCE_CALCULATION.value)) 
     open_fix_cap_button.pack(pady=10)
 
     ttk.Label(left, text="Power By WuWei",foreground="#FAF0E6",font=("Helvetica", 16)).pack(side="bottom", pady=(0, 30))

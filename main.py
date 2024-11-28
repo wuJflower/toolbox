@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-from tkinter import messagebox
+from ttkbootstrap.dialogs import Messagebox
 
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
@@ -96,6 +96,8 @@ def open_file_picker():
 
         
         global cap_list
+        global window_height
+        global window_width
         
         # 修复重复创建text_widget bug
         for i in cap_list:
@@ -109,9 +111,12 @@ def open_file_picker():
         # bug，暂时无法提取文件名，用于显示
         # fix 修复提取文件名
         if(os.path.splitext(os.path.basename(file_path[0]))[1].lower() != ".txt"):
-            messagebox.showerror("错误", "请选择txt格式的电容校准文件")
+            Messagebox.show_error( "请选择txt格式的电容校准文件", title="文件格式错误",position=[window_width/2,window_height/2])
             return
-        messagebox.showinfo("提示", "已选择文件："+os.path.splitext(os.path.basename(file_path[0]))[0].lower()+os.path.splitext(os.path.basename(file_path[0]))[1].lower())
+        Messagebox.show_info( "已选择文件："+os.path.splitext(os.path.basename(file_path[0]))[0].lower()\
+                             +os.path.splitext(os.path.basename(file_path[0]))[1].lower(),\
+                             title="文件选择成功",\
+                             position=[window_width/2,window_height/2])
         global input_file_name
         input_file_name.config(text=os.path.splitext(os.path.basename(file_path[0]))[0].lower()+os.path.splitext(os.path.basename(file_path[0]))[1].lower())
         
@@ -236,7 +241,9 @@ def create_fix_cap_page():
 
 def open_file(file_path:str):
     if file_path == "":
-        messagebox.showwarning("提示", "请先打开校准文件 并点击 `计算并保存` ")
+        global window_width
+        global window_height
+        Messagebox.show_warning("请先打开校准文件",title="提示",position=[window_width//2,window_height//2])
         return
     if platform.system() == "Windows":
         os.system(f"notepad {file_path}")
@@ -249,13 +256,16 @@ def add_cap(cap_val:str , count :str):
      cap_val 为非负数即可
       count  必须为非负整数 """
     
+    global window_width
+    global window_height
+    
     if cap_val == "" or count == "":
-        messagebox.showwarning("提示", "请输入容值和数量")
+        Messagebox.show_warning( "请输入容值和数量",title="提示",position=[window_width//2,window_height//2])
         return
     
     # 检测机制不完全，待解决；”123\"" 这种情况也能通过
     if  re.match(r'^-?\d*\.\d+$', cap_val) == False or re.match(r'^-?\d*\.\d+$', count)== False :
-        messagebox.showwarning("提示", "请输入正确的数字")
+        Messagebox.show_warning( "请输入正确的数字", title="提示",position=[window_width//2,window_height//2])
         return
     
 
@@ -306,9 +316,11 @@ def delete_frame(index:int):
 # 计算并联总容值
 def cal_and_save(cap_val:str , count :str):
     
+    global window_width
+    global window_height
     if cap_file_read == False:
         # 用提示框提示请先打开校准文件
-        messagebox.showwarning("提示", "请先打开校准文件")
+        Messagebox.show_warning( "请先打开校准文件",title="提示",position=[window_width//2,window_height//2])
         return
     # 断言 assert 校验输入参数str 是否都是数字，不是则提示
     # 待解决 检测字符串是否是数字
@@ -435,8 +447,11 @@ def create_auth_page(index ):
     destroy_root(right)
 
     # 校验输入index在PAEGE_INDEX范围内
+    
+    global window_width
+    global window_height
     if index < 0 or index >= len(PAGE_INDEX):
-        messagebox.showwarning("提示", "打开错误页面")
+        Messagebox.show_warning( "打开错误页面",title="警告",position=(window_width/2,window_height/2))
 
 
     # Model 层

@@ -3,7 +3,7 @@ remote_url = https://gitee.com/JaFlower/toolbox.git
 remote_name = origin
 remote_branch = freqSpeedLevel
 
-local_branch = freq
+local_branch = feature-freqSpeedLevel
 
 
 
@@ -14,7 +14,8 @@ add_remote:
 # 拉取远程仓库 特定分支到 本地分支
 fork_remote:add_remote
 	git checkout  -b $(local_branch) $(remote_name)/$(remote_branch)
-
+switch_branch:
+	git checkout $(local_branch)
 
 pull:
 	git pull $(remote_name) $(remote_branch)

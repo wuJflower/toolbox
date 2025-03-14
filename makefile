@@ -14,7 +14,7 @@ add_remote:
 # 拉取远程仓库 特定分支到 本地分支
 fork_remote:add_remote
 	git checkout  -b $(local_branch) $(remote_name)/$(remote_branch)
-
+# 切换仓库
 
 pull:
 	git pull $(remote_name) $(remote_branch)

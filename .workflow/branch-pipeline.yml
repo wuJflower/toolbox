@@ -20,12 +20,13 @@ stages:
         displayName: 准备requirements.txt文件
         pythonVersion: '3.9'
         commands:
+          - pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
           - pip install pipreqs
           - pipreqs .
         artifacts:
-          - name: BUILD_ARTIFACT
+          - name: reqirements
             path:
-              - ./
+              - requirements.txt
         caches: []
         notify: []
         strategy:

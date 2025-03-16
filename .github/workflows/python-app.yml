@@ -33,6 +33,7 @@ jobs:
         pyinstaller --onefile --noconsole  -n  temp.exe main.py 
     - name: Upload the package
       uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
       with:
           files: |
             temp.exe

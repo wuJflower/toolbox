@@ -1,3 +1,2 @@
-tkinter 
-tkmessagebox
+tkinter == 8.6
 ttkbootstrap==1.10.1

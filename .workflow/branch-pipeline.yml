@@ -16,25 +16,9 @@ stages:
     trigger: auto
     steps:
       - step: build@python
-        name: prepare
-        displayName: 准备requirements.txt文件
-        pythonVersion: '3.9'
-        commands:
-          - pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-          - pip install pipreqs
-          - pipreqs .
-        artifacts:
-          - name: reqirements
-            path:
-              - requirements.txt
-        caches: []
-        notify: []
-        strategy:
-          retry: '2'
-      - step: build@python
         name: build_python
         displayName: Python 构建
-        pythonVersion: '3.9'
+        pythonVersion: '3.12'
         commands:
           - python3 -m pip install --upgrade pip
           - pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
@@ -45,7 +29,6 @@ stages:
             path:
               - ./
         strategy: {}
-        dependsOn: prepare
       - step: publish@general_artifacts
         name: publish_general_artifacts
         displayName: 上传制品
